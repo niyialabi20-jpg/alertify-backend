@@ -12,13 +12,13 @@ APP_ENV=prod php bin/console cache:warmup --no-debug || true
 # Run migrations if DATABASE_URL is set
 if [ ! -z "$DATABASE_URL" ]; then
     echo "Running database migrations..."
-    php bin/console doctrine:migrations:migrate --no-interaction || true
+    php bin/console doctrine:migrations:migrate --no-interaction
 fi
 
 # Start the Mercure hub in the background
 echo "Starting Mercure hub on port ${MERCURE_PORT}"
+export ADDR="0.0.0.0:${MERCURE_PORT}"
 /usr/local/bin/mercure \
-    --addr="0.0.0.0:${MERCURE_PORT}" \
     --jwt-key="${MERCURE_JWT_SECRET}" \
     --publisher-jwt-key="${MERCURE_JWT_SECRET}" \
     --subscriber-jwt-key="${MERCURE_JWT_SECRET}" \
