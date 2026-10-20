@@ -5,6 +5,16 @@ PORT="${PORT:-8000}"
 MERCURE_PORT="${MERCURE_PORT:-3000}"
 MERCURE_JWT_SECRET="${MERCURE_JWT_SECRET:-change-me-in-production}"
 
+# Warm up cache if not already done
+echo "Warming up Symfony cache..."
+APP_ENV=prod php bin/console cache:warmup --no-debug || true
+
+# Run migrations if DATABASE_URL is set
+if [ ! -z "$DATABASE_URL" ]; then
+    echo "Running database migrations..."
+    php bin/console doctrine:migrations:migrate --no-interaction || true
+fi
+
 # Start the Mercure hub in the background
 echo "Starting Mercure hub on port ${MERCURE_PORT}"
 /usr/local/bin/mercure \

@@ -87,9 +87,6 @@ RUN mkdir -p config/jwt \
         && openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem; \
     fi
 
-# Warm up the Symfony cache at build time
-RUN APP_ENV=prod php bin/console cache:warmup --no-debug
-
 # Copy and set entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
